@@ -7,21 +7,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataService {
 
+
     public void init() {
-        String markets = this.loadMarkets();
-        String events = this.loadEvents();
+        String markets = this.loadFile("markets.json");
+        String events = this.loadFile("events.json");
+        String market = this.loadFile("market.json");
+        String event = this.loadFile("event.json");
         if(markets != null) System.out.println(markets);
         if(events != null) System.out.println(events);
+        if(market != null) System.out.println(market);
+        if(event != null) System.out.println(event);
     }
 
-    private String loadMarkets() {
-        String markets = FileReader.getResourceFileAsString("markets.json");
-        return markets;
-    }
-
-    private String loadEvents() {
-        String events = FileReader.getResourceFileAsString("events.json");
-        return events;
+    public String loadFile(String fileName) {
+        String file = FileReader.getResourceFileAsString(fileName);
+        return file;
     }
 
 }
