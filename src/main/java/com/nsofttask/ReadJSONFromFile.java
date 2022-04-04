@@ -13,8 +13,8 @@ public class ReadJSONFromFile {
 
     JSONParser parser = new JSONParser();
 
-    public void readJson() {
-        try (FileReader reader = new FileReader("C:\\Users\\Limitless\\Desktop\\nstask\\Appendix 1 - initial data\\Markets.json")) {
+    public void readJson(String path) {
+        try (FileReader reader = new FileReader(path)) {
             Object object = parser.parse(reader);
 
             JSONArray marketList = (JSONArray) object;

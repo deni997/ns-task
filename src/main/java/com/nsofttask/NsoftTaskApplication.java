@@ -15,8 +15,9 @@ public class NsoftTaskApplication {
 	@Bean
 	CommandLineRunner run() {
 		return args -> {
-			ReadJSONFromFile readJson = new ReadJSONFromFile();
-			readJson.readJson();
+			ReadJSONFromFile jsonReader = new ReadJSONFromFile();
+			String path = "C:\\Users\\Limitless\\Desktop\\nstask\\Appendix 1 - initial data\\Markets.json";
+			jsonReader.readJson(path);
 		};
 	}
 }
