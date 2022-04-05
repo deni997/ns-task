@@ -1,4 +1,4 @@
-package com.nsofttask.model;
+package com.nsofttask.enumerations;
 
 public enum Status {
     INACTIVE(0),
