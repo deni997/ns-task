@@ -1,5 +1,7 @@
 package com.nsofttask.util;
 
+import com.google.gson.Gson;
+import com.nsofttask.model.Market;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
@@ -28,10 +30,7 @@ public class FileReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return content;
     }
-
-
 
 }
