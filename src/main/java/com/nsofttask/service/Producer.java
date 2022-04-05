@@ -8,14 +8,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class Producer {
 
-    public static final String marketTopic = "market";
-    public static final String marketData = FileReader.getResourceFileAsString("market.json");
+    private static final String marketTopic = "market";
+    private static final String marketData = FileReader.getResourceFileAsString("market.json");
+    private static final String eventTopic = "event";
+    private static final String eventData = FileReader.getResourceFileAsString("event.json");
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void publishToTopic() {
-        System.out.println("Publishing to topic:\n" + marketTopic);
-        this.kafkaTemplate.send(marketTopic, marketData);
+    public void publishToTopic(String topicName, String data) {
+        System.out.println("Publishing to topic:\n" + topicName);
+        this.kafkaTemplate.send(topicName, data);
     }
 }
