@@ -1,5 +1,7 @@
 package com.nsofttask.model;
 
+import com.nsofttask.enumerations.Status;
+
 import java.util.List;
 
 public class Market {

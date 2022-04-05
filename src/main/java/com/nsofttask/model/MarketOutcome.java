@@ -1,5 +1,7 @@
 package com.nsofttask.model;
 
+import com.nsofttask.enumerations.Status;
+
 public class MarketOutcome {
 
     private String id;
