@@ -1,10 +1,18 @@
 package com.nsofttask;
 
+import com.google.gson.Gson;
+import com.nsofttask.enumerations.Status;
+import com.nsofttask.model.Market;
+import com.nsofttask.model.MarketOutcome;
 import com.nsofttask.service.DataService;
+import com.nsofttask.util.FileReader;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class OfferApplication {
