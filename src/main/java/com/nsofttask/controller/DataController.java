@@ -1,5 +1,7 @@
 package com.nsofttask.controller;
 
+import com.nsofttask.model.Event;
+import com.nsofttask.model.Market;
 import com.nsofttask.service.DataService;
 import com.nsofttask.service.Producer;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,19 +25,32 @@ public class DataController {
 
     @PostMapping("/publish")
     public void sendMessage() {
-        producer.publishToTopic("event", dataService.getEvents());
+
     }
 
     @GetMapping("/events")
-    public String getEvents() {
+    public Event[] getEvents() {
         System.out.println(dataService.getEvents());
         return dataService.getEvents();
     }
 
     @GetMapping("/markets")
-    public String getMarkets() {
+    public Market[] getMarkets() {
         System.out.println(dataService.getMarkets());
         return dataService.getMarkets();
     }
+
+    @GetMapping("/event")
+    public Event getEvent() {
+        System.out.println(dataService.getEvent());
+        return dataService.getEvent();
+    }
+
+    @GetMapping("/market")
+    public Market getMarket() {
+        System.out.println(dataService.getMarket());
+        return dataService.getMarket();
+    }
+
 
 }
