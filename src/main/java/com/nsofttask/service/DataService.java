@@ -16,53 +16,81 @@ import java.util.List;
 @Service
 public class DataService {
 
-    private static Gson gson;
+    private static Gson gson = new Gson();
 
-    private String markets;
-    private String events;
-    private Market market;
-    private MarketOutcome outcome;
+    private Event[] events;
+    private Market[] markets;
     private Event event;
+    private Market market;
 
-    public void init() throws JsonProcessingException {
-        System.out.println("=============== Initializing data ===============");
-        this.markets = loadMarkets();
-        System.out.println(this.markets);
-        this.events = loadEvents();
-        System.out.println(this.events);
-        market = Converter.marketToJson(this.markets);
-        List<MarketOutcome> outcomes = market.getOutcomes(); // vraca niz objekata, koje treba premapirat u json objekte
-         // ista stvar i sa event
-        System.out.println("Market id: " + market.getId() + "\nMarket name: " + market.getName()
-                + "\nMarket outcomes: " + outcomes + "\nMarket status:" + market.getStatus());
-        System.out.println("=============== Data initialized ===============");
+    public void init() {
+        System.out.println("====================== Initializing data ======================");
+        this.events = gson.fromJson(loadEventsJsonFromFile(), Event[].class);
+        this.markets = gson.fromJson(loadMarketsJsonFromFile(), Market[].class);
+        this.event = gson.fromJson(loadEventJsonFromFile(), Event.class);
+        this.market = gson.fromJson(loadMarketJsonFromFile(), Market.class);
+        System.out.println("Events initialized");
+        for(Event event : events) {
+            System.out.println(gson.toJson(event));
+        }
+        System.out.println("Markets initialized");
+        for(Market market : markets) {
+            System.out.println(gson.toJson(market));
+        }
 
+        System.out.println("Single Event initialized");
+        System.out.println(gson.toJson(event));
+        System.out.println("Single Market initialized");
+        System.out.println(gson.toJson(market));
+
+        System.out.println("===============================================================");
     }
 
-    public String getMarkets() {
-        return markets;
+    private String loadMarketsJsonFromFile() {
+        return FileReader.getResourceFileAsString("markets.json");
     }
 
-    public String getEvents() {
+    private String loadEventsJsonFromFile() {
+        return FileReader.getResourceFileAsString("events.json");
+    }
+
+    private String loadMarketJsonFromFile() {
+        return FileReader.getResourceFileAsString("market.json");
+    }
+
+    private String loadEventJsonFromFile() {
+        return FileReader.getResourceFileAsString("event.json");
+    }
+
+    public Event[] getEvents() {
         return events;
     }
 
-    public void setMarkets(String markets) {
-        this.markets = markets;
-    }
-
-    public void setEvents(String events) {
+    public void setEvents(Event[] events) {
         this.events = events;
     }
 
-    private String loadMarkets() {
-        String markets = FileReader.getResourceFileAsString("market.json");
+    public Market[] getMarkets() {
         return markets;
     }
 
-    private String loadEvents() {
-        String events = FileReader.getResourceFileAsString("event.json");
-        return events;
+    public void setMarkets(Market[] markets) {
+        this.markets = markets;
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Market getMarket() {
+        return market;
+    }
+
+    public void setMarket(Market market) {
+        this.market = market;
+    }
 }
