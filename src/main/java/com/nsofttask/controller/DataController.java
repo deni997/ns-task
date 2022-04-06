@@ -18,15 +18,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class DataController {
 
-    @Autowired
-    Producer producer;
-
     private final DataService dataService;
-
-    @PostMapping("/publish")
-    public void sendMessage() {
-
-    }
 
     @GetMapping("/events")
     public Event[] getEvents() {
