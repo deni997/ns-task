@@ -3,11 +3,8 @@ package com.nsofttask.controller;
 import com.nsofttask.model.Event;
 import com.nsofttask.model.Market;
 import com.nsofttask.service.DataService;
-import com.nsofttask.service.Producer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

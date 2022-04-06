@@ -1,14 +1,10 @@
 package com.nsofttask.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.nsofttask.model.Event;
 import com.nsofttask.model.Market;
-import com.nsofttask.model.MarketOutcome;
-import com.nsofttask.util.Converter;
 import com.nsofttask.util.FileReader;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
