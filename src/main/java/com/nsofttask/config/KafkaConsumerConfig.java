@@ -18,6 +18,7 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
+    // for docker containerized kafka use port 9093
     private String bootstrapServers = "localhost:9092";
 
     @Bean

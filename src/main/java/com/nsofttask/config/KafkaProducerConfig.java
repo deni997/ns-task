@@ -20,6 +20,7 @@ import java.util.Map;
 public class KafkaProducerConfig {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
+    // for docker containerized kafka use port 9093
     private String bootstrapServers = "localhost:9092";
 
     @Bean
