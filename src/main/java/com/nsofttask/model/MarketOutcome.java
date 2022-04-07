@@ -4,8 +4,10 @@ import com.google.gson.annotations.SerializedName;
 import com.nsofttask.enumerations.Status;
 import com.sun.istack.internal.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class MarketOutcome {
 
     @NotNull
