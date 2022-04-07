@@ -2,11 +2,17 @@ package com.nsofttask.service;
 
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.nsofttask.enumerations.Status;
 import com.nsofttask.model.Event;
 import com.nsofttask.model.Market;
 import com.nsofttask.util.FileReader;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,17 +20,15 @@ public class DataService {
 
     private static Gson gson = new Gson();
 
-    private Event[] events;
-    private Market[] markets;
-    private Event event;
-    private Market market;
+    private List<Event> events;
+    private List<Market> markets;
 
     public void init() {
         System.out.println("====================== Initializing data ======================");
-        this.events = gson.fromJson(loadEventsJsonFromFile(), Event[].class);
-        this.markets = gson.fromJson(loadMarketsJsonFromFile(), Market[].class);
-        this.event = gson.fromJson(loadEventJsonFromFile(), Event.class);
-        this.market = gson.fromJson(loadMarketJsonFromFile(), Market.class);
+        Type eventListType = new TypeToken<ArrayList<Event>>() {}.getType();
+        Type marketListType = new TypeToken<ArrayList<Market>>() {}.getType();
+        this.events = gson.fromJson(loadEventsJsonFromFile(), eventListType);
+        this.markets = gson.fromJson(loadMarketsJsonFromFile(), marketListType);
         System.out.println("Events initialized");
         for(Event event : events) {
             System.out.println(gson.toJson(event));
@@ -33,12 +37,6 @@ public class DataService {
         for(Market market : markets) {
             System.out.println(gson.toJson(market));
         }
-
-        System.out.println("Single Event initialized");
-        System.out.println(gson.toJson(event));
-        System.out.println("Single Market initialized");
-        System.out.println(gson.toJson(market));
-
         System.out.println("===============================================================");
     }
 
@@ -50,43 +48,68 @@ public class DataService {
         return FileReader.getResourceFileAsString("events.json");
     }
 
-    private String loadMarketJsonFromFile() {
-        return FileReader.getResourceFileAsString("market.json");
+    public List<Event> getEvents() {
+
+        // Datum
+
+        List<Event> eventsDto = new ArrayList<>();
+        this.events.forEach(e -> {
+            if (e.getStatus() == Status.ACTIVE) {
+                eventsDto.add(e);
+            }
+        });
+
+        return eventsDto;
     }
 
-    private String loadEventJsonFromFile() {
-        return FileReader.getResourceFileAsString("event.json");
+    public List<Market> getMarkets() {
+
+        List<Market> marketsDto = new ArrayList<>();
+        this.markets.forEach(m -> {
+            if (m.getStatus() == Status.ACTIVE) {
+                marketsDto.add(m);
+            }
+        });
+
+        return marketsDto;
     }
 
-    public Event[] getEvents() {
-        return events;
+    public void updateEvents(Event event) {
+
+        System.out.println("Update events: " + event.getName());
+
+        Event existingEvent = this.events.stream()
+                .filter(e -> event.getId().equals(e.getId()))
+                .findAny()
+                .orElse(null);
+
+        if (existingEvent != null) {
+            int index = this.events.indexOf(existingEvent);
+            this.events.set(index, event);
+
+            return;
+        }
+
+        this.events.add(event);
     }
 
-    public void setEvents(Event[] events) {
-        this.events = events;
+    public void updateMarkets(Market market) {
+
+        System.out.println("Update markets: " + market.getName());
+
+        Market existingMarket = this.markets.stream()
+                .filter(m -> market.getId().equals(m.getId()))
+                .findAny()
+                .orElse(null);
+
+        if (existingMarket != null) {
+            int index = this.markets.indexOf(existingMarket);
+            this.markets.set(index, market);
+
+            return;
+        }
+
+        this.markets.add(market);
     }
 
-    public Market[] getMarkets() {
-        return markets;
-    }
-
-    public void setMarkets(Market[] markets) {
-        this.markets = markets;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public Market getMarket() {
-        return market;
-    }
-
-    public void setMarket(Market market) {
-        this.market = market;
-    }
 }
