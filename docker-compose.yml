@@ -1,0 +1,48 @@
+version: '3'
+# https://www.baeldung.com/kafka-docker-connection
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper:3.8.0
+    container_name: zookeeper
+    networks:
+      - kafka_network
+    ports:
+      - "2181:2181"
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+  kafka:
+    image: bitnami/kafka:3.1.0
+    container_name: kafka
+    networks:
+      - kafka_network
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      # KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      # https://hub.docker.com/r/bitnami/kafka/
+      # More info: https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/#adding-new-listener
+      # Accessing Apache Kafka with internal and external clients
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CFG_LISTENERS: CLIENT://:9092,EXTERNAL://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: CLIENT
+    depends_on:
+      - zookeeper
+  kowl:
+    image: rsmnarts/kowl:latest
+    container_name: kowl
+    ports:
+      - "8080:8080"
+    networks:
+      - kafka_network
+    environment:
+      KAFKA_BROKERS: host.docker.internal:9092
+    depends_on:
+      - kafka
+networks:
+  kafka_network:
