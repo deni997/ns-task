@@ -26,7 +26,7 @@ public class KafkaDemoController {
 
     @PostMapping("/publish/event")
     public void sendEventMessage(@RequestBody Event event) {
-        // Test file, for using uncomment and remove @RequestBody annotation
+        // Test file, for using uncomment and remove parameter
         // Event event = gson.fromJson(FileReader.getResourceFileAsString("event.json"), Event.class);
 
         producer.publishEventToTopic("event", event);
@@ -34,7 +34,7 @@ public class KafkaDemoController {
 
     @PostMapping("/publish/market")
     public void sendMarketMessage(@RequestBody Market market) {
-        // Test file, for using uncomment and remove @RequestBody annotation
+        // Test file, for using uncomment and remove parameter
         // Market market = gson.fromJson(FileReader.getResourceFileAsString("market.json"), Market.class);
 
         producer.publishMarketToTopic("market", market);
