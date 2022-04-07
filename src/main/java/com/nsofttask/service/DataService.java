@@ -4,15 +4,17 @@ package com.nsofttask.service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nsofttask.enumerations.Status;
-import com.nsofttask.model.Event;
-import com.nsofttask.model.Market;
+import com.nsofttask.model.*;
 import com.nsofttask.util.FileReader;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -53,24 +55,93 @@ public class DataService {
         // Datum
 
         List<Event> eventsDto = new ArrayList<>();
-        this.events.forEach(e -> {
-            if (e.getStatus() == Status.ACTIVE) {
-                eventsDto.add(e);
-            }
-        });
 
+        for (Event event : this.events) {
+            if (event.getStatus() == Status.INACTIVE) {
+                continue;
+            }
+
+            Event eventDto = new Event();
+
+            eventDto.setId(event.getId());
+            eventDto.setName(event.getName());
+            eventDto.setStatus(event.getStatus());
+            eventDto.setStartsAt(event.getStartsAt());
+
+            List<EventMarket> eventMarketsDto = new ArrayList<>();
+
+            for (EventMarket eventMarket : event.getMarkets()) {
+                if(eventMarket.getStatus() == Status.INACTIVE) {
+                    continue;
+                }
+
+                EventMarket eventMarketDto = new EventMarket();
+
+                eventMarketDto.setId(eventMarket.getId());
+                eventMarketDto.setMarketId(eventMarket.getMarketId());
+                eventMarketDto.setStatus(eventMarket.getStatus());
+
+                eventMarketsDto.add(eventMarketDto);
+
+                List<EventMarketOutcome> eventMarketOutcomesDto = new ArrayList<>();
+
+                for (EventMarketOutcome eventMarketOutcome : eventMarket.getOutcomes()){
+                    if(eventMarketOutcome.getStatus() == Status.INACTIVE){
+                        continue;
+                    }
+
+                    EventMarketOutcome eventMarketOutcomeDto = new EventMarketOutcome();
+
+                    eventMarketOutcomeDto.setId(eventMarketOutcome.getId());
+                    eventMarketOutcomeDto.setOutcomeId(eventMarketOutcome.getOutcomeId());
+                    eventMarketOutcomeDto.setStatus(eventMarketOutcome.getStatus());
+                    eventMarketOutcomeDto.setOdds(eventMarketOutcome.getOdds());
+
+                    eventMarketOutcomesDto.add(eventMarketOutcomeDto);
+
+                    eventMarketDto.setOutcomes(eventMarketOutcomesDto);
+                }
+                eventDto.setMarkets(eventMarketsDto);
+            }
+            eventsDto.add(eventDto);
+        }
         return eventsDto;
     }
 
     public List<Market> getMarkets() {
 
         List<Market> marketsDto = new ArrayList<>();
-        this.markets.forEach(m -> {
-            if (m.getStatus() == Status.ACTIVE) {
-                marketsDto.add(m);
-            }
-        });
 
+        for (Market market : this.markets) {
+            if(market.getStatus() == Status.INACTIVE) {
+                continue;
+            }
+
+            Market marketDto = new Market();
+
+            marketDto.setId(market.getId());
+            marketDto.setName(market.getName());
+            marketDto.setStatus(market.getStatus());
+
+            List<MarketOutcome> outcomesDto = new ArrayList<>();
+
+            for(MarketOutcome outcome : market.getOutcomes()) {
+                if (outcome.getStatus() == Status.INACTIVE) {
+                    continue;
+                }
+
+                MarketOutcome outcomeDto = new MarketOutcome();
+
+                outcomeDto.setId(outcome.getId());
+                outcomeDto.setName(outcome.getName());
+                outcomeDto.setStatus(outcome.getStatus());
+
+                outcomesDto.add(outcomeDto);
+
+                marketDto.setOutcomes(outcomesDto);
+            }
+            marketsDto.add(marketDto);
+        }
         return marketsDto;
     }
 
@@ -84,6 +155,7 @@ public class DataService {
                 .orElse(null);
 
         if (existingEvent != null) {
+
             int index = this.events.indexOf(existingEvent);
             this.events.set(index, event);
 
