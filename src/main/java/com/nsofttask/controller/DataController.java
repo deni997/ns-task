@@ -18,28 +18,13 @@ public class DataController {
     private final DataService dataService;
 
     @GetMapping("/events")
-    public Event[] getEvents() {
-        System.out.println(dataService.getEvents());
+    public List<Event> getEvents() {
         return dataService.getEvents();
     }
 
     @GetMapping("/markets")
-    public Market[] getMarkets() {
-        System.out.println(dataService.getMarkets());
+    public List<Market> getMarkets() {
         return dataService.getMarkets();
     }
-
-    @GetMapping("/event")
-    public Event getEvent() {
-        System.out.println(dataService.getEvent());
-        return dataService.getEvent();
-    }
-
-    @GetMapping("/market")
-    public Market getMarket() {
-        System.out.println(dataService.getMarket());
-        return dataService.getMarket();
-    }
-
 
 }
