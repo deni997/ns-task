@@ -9,13 +9,11 @@ import com.nsofttask.util.FileReader;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DataService {
@@ -50,9 +48,7 @@ public class DataService {
         return FileReader.getResourceFileAsString("events.json");
     }
 
-    public List<Event> getEvents() {
-
-        // Datum
+    public List<Event> getEvents(String selectedDate) {
 
         List<Event> eventsDto = new ArrayList<>();
 
@@ -105,6 +101,15 @@ public class DataService {
             }
             eventsDto.add(eventDto);
         }
+
+        eventsDto = eventsDto.stream()
+                .filter(e -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate startsAt = LocalDate.parse(e.getStartsAt().split("T")[0], formatter);
+                    LocalDate selected = LocalDate.parse(selectedDate, formatter);
+                    return startsAt.isEqual(selected);
+                }).collect(Collectors.toList());
+
         return eventsDto;
     }
 
@@ -183,5 +188,4 @@ public class DataService {
 
         this.markets.add(market);
     }
-
 }
