@@ -5,7 +5,6 @@ import com.nsofttask.model.Event;
 import com.nsofttask.model.Market;
 import com.nsofttask.service.DataService;
 import com.nsofttask.service.Producer;
-import com.nsofttask.util.FileReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/kafka")
+@RequestMapping("/api/demo")
 @RequiredArgsConstructor
 public class KafkaDemoController {
 
@@ -29,6 +28,7 @@ public class KafkaDemoController {
         // Test file, for using uncomment and remove parameter
         // Event event = gson.fromJson(FileReader.getResourceFileAsString("event.json"), Event.class);
 
+        System.out.println("Publishing event to topic");
         producer.publishEventToTopic("event", event);
     }
 
