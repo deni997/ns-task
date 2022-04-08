@@ -7,14 +7,9 @@ NSoft Tasks
 > docker-compose up
 ```
 
-Update application.yml kafka bootstrap server to port 9093:
+Update bootstrapServers (KafkaConsumerConfig / KafkaProducerConfig) kafka bootstrap server to port 9093:
 ```
-producer:
-    bootstrap-servers:
-        - localhost:9093
-consumer:
-    bootstrap-servers:
-        - localhost:9093
+private String bootstrapServers = "localhost:9093";
 ```
 
 ### Kowl
@@ -25,4 +20,5 @@ http://localhost:8080
 ```
 > docker exec -it kafka /bin/sh
 > cd opt/bitnami/kafka/bin
-> kafka-topics.sh --create --topi test_topic --bootstrap-server localhost:9092
+> kafka-topics.sh --create --bootstrap-server localhost:9092 --partitions 2 --topic event
+> kafka-topics.sh --create --bootstrap-server localhost:9092 --partitions 1 --topic market
