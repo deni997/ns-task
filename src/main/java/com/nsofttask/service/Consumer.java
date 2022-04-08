@@ -1,6 +1,5 @@
 package com.nsofttask.service;
 
-import com.google.gson.Gson;
 import com.nsofttask.model.Event;
 import com.nsofttask.model.Market;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,8 @@ public class Consumer {
 
     @KafkaListener(topics = {"market"}, groupId = "mygroup")
     public void consumeMarketTopic(Market market) {
-        System.out.println("Consumed message:\n" + market);
+        dataService.updateMarkets(market);
+        System.out.println("Market updated.");
     }
 
 }
