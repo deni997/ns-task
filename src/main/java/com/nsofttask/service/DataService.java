@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nsofttask.enumerations.Status;
 import com.nsofttask.model.*;
 import com.nsofttask.util.FileReader;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -237,6 +238,16 @@ public class DataService {
             if (hasInvalidOutcomes) break;
         }
         return hasInvalidOutcomes;
+    }
+
+    @Scheduled(fixedRate = 30000)
+    public void removeStartedEvents() {
+
+        for(Event event : this.events) {
+            if (LocalDateTime.parse(event.getStartsAt()).isBefore(LocalDateTime.now())){
+                event.setStatus(Status.INACTIVE);
+            }
+        }
     }
 
 }
