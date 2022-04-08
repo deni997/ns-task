@@ -5,17 +5,17 @@
       "status":1,
       "outcomes":[
          {
-            "id":"3way-1",
+            "id:":"3way-1",
             "name":"1",
             "status":1
          },
          {
-            "id":"3way-2",
+            "id:":"3way-2",
             "name":"2",
             "status":1
          },
          {
-            "id":"3way-X",
+            "id:":"3way-X",
             "name":"X",
             "status":0
          }
@@ -27,12 +27,12 @@
       "status":0,
       "outcomes":[
          {
-            "id":"2way-1",
+            "id:":"2way-1",
             "name":"1",
             "status":1
          },
          {
-            "id":"2way-2",
+            "id:":"2way-2",
             "name":"2",
             "status":1
          }
