@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventMarketOutcome {
 
-    @NotNull
     private String id;
-    @NotNull
     private String outcomeId;
-    @NotNull
     private Status status;
-    @NotNull
     private Double odds;
 
 }

@@ -11,13 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class EventMarket {
 
-    @NotNull
     private String id;
-    @NotNull
     private String marketId;
-    @NotNull
     private Status status;
-    @NotNull
     private List<EventMarketOutcome> outcomes;
 
 }

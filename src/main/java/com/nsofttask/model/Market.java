@@ -1,5 +1,6 @@
 package com.nsofttask.model;
 
+import com.google.gson.annotations.SerializedName;
 import com.nsofttask.enumerations.Status;
 import com.sun.istack.internal.NotNull;
 import lombok.Data;
@@ -11,13 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Market {
 
-    @NotNull
     private String id;
-    @NotNull
     private String name;
-    @NotNull
     private Status status;
-    @NotNull
     private List<MarketOutcome> outcomes;
 
 }

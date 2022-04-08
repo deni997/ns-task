@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MarketOutcome {
 
-    @NotNull
+    @SerializedName("id:")
     private String id;
-    @NotNull
     private String name;
-    @NotNull
     private Status status;
 
 }
