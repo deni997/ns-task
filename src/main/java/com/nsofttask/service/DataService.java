@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,23 +52,42 @@ public class DataService {
 
     public List<Event> getEvents(String selectedDate) {
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         List<Event> eventsDto = new ArrayList<>();
 
         for (Event event : this.events) {
-            if (event.getStatus() == Status.INACTIVE) {
+            boolean eventMarketDoesNotExistInMarketList = false;
+
+            // Check if event started
+            if (LocalDateTime.parse(event.getStartsAt()).isBefore(LocalDateTime.now())) {
+                event.setStatus(Status.INACTIVE);
+            }
+
+            // Check event status
+            if(event.getStatus() == Status.INACTIVE) {
                 continue;
             }
 
+            // Mapping required events
             Event eventDto = new Event();
 
             eventDto.setId(event.getId());
             eventDto.setName(event.getName());
-            eventDto.setStatus(event.getStatus());
             eventDto.setStartsAt(event.getStartsAt());
+            eventDto.setStatus(event.getStatus());
 
             List<EventMarket> eventMarketsDto = new ArrayList<>();
 
+            // Mapping event markets and checking if they exist in markets list
             for (EventMarket eventMarket : event.getMarkets()) {
+                eventMarketDoesNotExistInMarketList = this.eventMarketDoesNotExistInMarketList(eventMarket);
+
+                if(eventMarketDoesNotExistInMarketList) {
+                    System.out.println("Event: '" + event.getName() + "' contains market/outcome that doesn't exist in the market list");
+                    break;
+                }
+
                 if(eventMarket.getStatus() == Status.INACTIVE) {
                     continue;
                 }
@@ -81,7 +102,8 @@ public class DataService {
 
                 List<EventMarketOutcome> eventMarketOutcomesDto = new ArrayList<>();
 
-                for (EventMarketOutcome eventMarketOutcome : eventMarket.getOutcomes()){
+                //
+                for (EventMarketOutcome eventMarketOutcome : eventMarket.getOutcomes()) {
                     if(eventMarketOutcome.getStatus() == Status.INACTIVE){
                         continue;
                     }
@@ -99,17 +121,20 @@ public class DataService {
                 }
                 eventDto.setMarkets(eventMarketsDto);
             }
-            eventsDto.add(eventDto);
+
+            if (!eventMarketDoesNotExistInMarketList) {
+                eventsDto.add(eventDto);
+            }
         }
 
-        eventsDto = eventsDto.stream()
-                .filter(e -> {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    LocalDate startsAt = LocalDate.parse(e.getStartsAt().split("T")[0], formatter);
-                    LocalDate selected = LocalDate.parse(selectedDate, formatter);
-                    return startsAt.isEqual(selected);
-                }).collect(Collectors.toList());
-
+        if(selectedDate != null && selectedDate != "") {
+            eventsDto = eventsDto.stream()
+                    .filter(e -> {
+                        LocalDate startsAt = LocalDate.parse(e.getStartsAt().split("T")[0], formatter);
+                        LocalDate selected = LocalDate.parse(selectedDate, formatter);
+                        return startsAt.isEqual(selected);
+                    }).collect(Collectors.toList());
+        }
         return eventsDto;
     }
 
@@ -188,4 +213,30 @@ public class DataService {
 
         this.markets.add(market);
     }
+
+    private boolean eventMarketDoesNotExistInMarketList(EventMarket eventMarket) {
+        Market market = this.markets.stream()
+                .filter(m -> Objects.equals(eventMarket.getMarketId(), m.getId()))
+                .findAny()
+                .orElse(null);
+
+        if(market == null) {
+            return true;
+        }
+
+        boolean hasInvalidOutcomes = true;
+        for (EventMarketOutcome emo : eventMarket.getOutcomes()) {
+            hasInvalidOutcomes = true;
+
+            for(MarketOutcome em : market.getOutcomes()) {
+                if (Objects.equals(em.getId(), emo.getOutcomeId())) {
+                    hasInvalidOutcomes = false;
+                }
+            }
+
+            if (hasInvalidOutcomes) break;
+        }
+        return hasInvalidOutcomes;
+    }
+
 }
