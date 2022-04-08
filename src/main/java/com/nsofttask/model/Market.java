@@ -1,8 +1,6 @@
 package com.nsofttask.model;
 
-import com.google.gson.annotations.SerializedName;
 import com.nsofttask.enumerations.Status;
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
